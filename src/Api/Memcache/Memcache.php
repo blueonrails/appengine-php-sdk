@@ -86,6 +86,7 @@ class Memcache {
                                                       $expire,
                                                       SetPolicy::ADD);
     } catch (Error $e) {
+      error_log($e->getTraceAsString());
       return false;
     }
     return $set_results[0] == SetStatusCode::STORED;
@@ -150,6 +151,7 @@ class Memcache {
     try {
       ApiProxy::makeSyncCall('memcache', 'Delete', $request, $response);
     } catch (Error $e) {
+      error_log($e->getTraceAsString());
       return false;
     }
     $status_list = $response->getDeleteStatusList();
@@ -168,6 +170,7 @@ class Memcache {
     try {
       ApiProxy::makeSyncCall('memcache', 'FlushAll', $request, $response);
     } catch (Error $e) {
+      error_log($e->getTraceAsString());
       return false;
     }
     return true;
@@ -189,6 +192,7 @@ class Memcache {
         $return_value[$item->getKey()] = MemcacheUtils::deserializeValue(
             $item->getValue(), $item->getFlags());
       } catch (\UnexpectedValueException $e) {
+        error_log($e->getTraceAsString());
         // Skip entries that cannot be deserialized.
       }
     }
@@ -220,6 +224,7 @@ class Memcache {
       try {
         $return_value = $this->getMulti(array($keys), array($flags));
       } catch (Error $e) {
+        error_log($e->getTraceAsString());
         return false;
       }
       if (array_key_exists($keys, $return_value)) {
@@ -280,6 +285,7 @@ class Memcache {
     try {
       ApiProxy::makeSyncCall('memcache', 'Increment', $request, $response);
     } catch (Exception $e) {
+      error_log($e->getTraceAsString());
       return false;
     }
     if ($response->hasNewValue()) {
@@ -329,6 +335,7 @@ class Memcache {
                                                       $expire,
                                                       SetPolicy::REPLACE);
     } catch (Error $e) {
+      error_log($e->getTraceAsString());
       return false;
     }
     return $set_results[0] == SetStatusCode::STORED;
@@ -367,6 +374,7 @@ class Memcache {
                                                        $expire,
                                                        SetPolicy::SET);
     } catch (Error $e) {
+      error_log($e->getTraceAsString());
       return false;
     }
     return $set_results[0] == SetStatusCode::STORED;
